@@ -1,0 +1,6 @@
+from tomcat:8-jdk8-openjdk
+
+ENV SERVER_PORT=8080
+ENV registry.host=svcregistry
+
+COPY emailsvc.war /usr/local/tomcat/webapps/

@@ -1,0 +1,97 @@
+version: '3.0'
+networks:
+    noodlyNetwork:
+        external: true
+
+services:
+    dbsvc:
+        container_name: dbsvc
+        image: "mysql:latest"
+        ports:
+            - "7689:3306"
+        networks:
+            - noodlyNetwork
+        environment:
+            - MYSQL_ROOT_PASSWORD=NoodlyR00t
+            - MYSQL_DATABASE=noodlyinvesting
+        volumes:
+            - C:\Users\tjlew\OneDrive\Desktop\Noodly\Docker\mysql\data:/var/lib/mysql
+    
+    svcregistry:
+        container_name: svcregistry
+        build:
+            context: ./registry
+            dockerfile: SvcRegistryDockerFile
+        image: svcregistry:1
+        ports:
+            - "46122:8080"
+        networks:
+            - noodlyNetwork
+    
+    zuul:
+        container_name: zuul
+        build:
+            context: ./zuul
+            dockerfile: ZuulDockerFile
+        image: zuul:1
+        ports:
+            - "8081:8080"
+        networks:
+            - noodlyNetwork
+        depends_on:
+            - svcregistry
+    
+    notifysvc:
+        container_name: notifysvc
+        build:
+            context: ./NotifySvc
+            dockerfile: NotifyDockerFile
+        image: notifysvc:1
+        ports:
+            - "7070:8080"
+        networks:
+            - noodlyNetwork
+        depends_on:
+            - svcregistry
+            - dbsvc
+            
+    emailsvc:
+        container_name: emailsvc
+        build:
+            context: ./EmailSvc
+            dockerfile: EmailDockerFile
+        image: emailsvc:1
+        ports:
+            - "7072:8080"
+            - "587:587"
+        networks:
+            - noodlyNetwork
+        depends_on:
+            - svcregistry
+            
+    usersvc:
+        container_name: usersvc
+        build:
+            context: ./UserSvc
+            dockerfile: UserDockerFile
+        image: usersvc:1
+        ports:
+            - "7074:8080"
+        networks:
+            - noodlyNetwork
+        depends_on:
+            - dbsvc
+            - svcregistry
+    
+    trackersvc:
+        container_name: trackersvc
+        build:
+            context: ./TrackerSvc
+            dockerfile: TrackerDockerFile
+        image: trackersvc:1
+        ports:
+            - "7076:8080"
+        networks:
+            - noodlyNetwork
+        depends_on:
+            - svcregistry

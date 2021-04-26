@@ -1,0 +1,10 @@
+from tomcat:8-jdk8-openjdk
+
+ENV NOTIFYSVC_DB_HOST=dbsvc
+ENV NOTIFYSVC_DB_PORT=3306
+ENV NOTIFYSVC_DB_USER=root
+ENV NOTIFYSVC_DB_PASS=NoodlyR00t
+ENV SERVER_PORT=8080
+ENV registry.host=svcregistry
+
+COPY notifysvc.war /usr/local/tomcat/webapps/

@@ -1,0 +1,10 @@
+from tomcat:8-jdk8-openjdk
+
+ENV USERSVC_DB_HOST=dbsvc
+ENV USERSVC_DB_PORT=3306
+ENV USERSVC_DB_USER=root
+ENV USERSVC_DB_PASS=NoodlyR00t
+ENV SERVER_PORT=8080
+ENV registry.host=svcregistry
+
+COPY usersvc.war /usr/local/tomcat/webapps/
